@@ -1,0 +1,5 @@
+.env
+.nova
+.DS_Store
+docker-compose.override.yml
+/appData
