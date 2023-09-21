@@ -1,9 +1,9 @@
-version: "2"
+version: "3.8"
 
 services:
   immich-server:
     container_name: immich_server
-    image: ghcr.io/immich-app/immich-server:release
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     command: [ "start.sh", "immich" ]
     volumes:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
@@ -19,7 +19,7 @@ services:
 
   immich-microservices:
     container_name: immich_microservices
-    image: ghcr.io/immich-app/immich-server:release
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # extends:
     #   file: hwaccel.yml
     #   service: hwaccel
@@ -38,7 +38,7 @@ services:
 
   immich-machine-learning:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:release
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     volumes:
       - model-cache:/cache
     env_file:
@@ -49,7 +49,7 @@ services:
 
   immich-web:
     container_name: immich_web
-    image: ghcr.io/immich-app/immich-web:release
+    image: ghcr.io/immich-app/immich-web:${IMMICH_VERSION:-release}
     env_file:
       - .env
     restart: always
@@ -58,7 +58,7 @@ services:
 
   typesense:
     container_name: immich_typesense
-    image: typesense/typesense:0.24.1
+    image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
     environment:
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
       - TYPESENSE_DATA_DIR=/data
@@ -72,14 +72,14 @@ services:
 
   redis:
     container_name: immich_redis
-    image: redis:6.2-alpine
+    image: redis:6.2-alpine@sha256:70a7a5b641117670beae0d80658430853896b5ef269ccf00d1827427e3263fa3
     restart: always
     networks:
       - internal
 
   database:
     container_name: immich_postgres
-    image: postgres:14-alpine
+    image: postgres:14-alpine@sha256:28407a9961e76f2d285dc6991e8e48893503cc3836a4755bbc2d40bcc272a441
     env_file:
       - .env
     environment:
@@ -94,7 +94,7 @@ services:
 
   immich-proxy:
     container_name: immich_proxy
-    image: ghcr.io/immich-app/immich-proxy:release
+    image: ghcr.io/immich-app/immich-proxy:${IMMICH_VERSION:-release}
     environment:
       # Make sure these values get passed through from the env file
       - IMMICH_SERVER_URL
@@ -137,6 +137,7 @@ volumes:
 
 networks:
   gateway:
-    external:
-      name: ${FRONTEND_NETWORK}
+    name: ${FRONTEND_NETWORK}
+    external: true
   internal:
+    name: ${BACKEND_NETWORK}
