@@ -65,7 +65,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
     volumes:
-      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     restart: always
     networks:
       - internal
@@ -91,6 +91,7 @@ services:
       - internal
 
 volumes:
+  pgdata:
   model-cache:
 
 networks:
