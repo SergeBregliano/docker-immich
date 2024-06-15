@@ -4,6 +4,7 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:release
+    command: [ "start.sh", "immich" ]
     volumes:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
     env_file:
@@ -17,6 +18,24 @@ services:
     networks:
       - internal
       - gateway
+
+  immich-microservices:
+    container_name: immich_microservices
+    image: ghcr.io/immich-app/immich-server:release
+    # extends:
+    #   file: hwaccel.yml
+    #   service: hwaccel
+    command: [ "start.sh", "microservices" ]
+    volumes:
+      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - database
+    restart: always
+    networks:
+      - internal
 
   immich-machine-learning:
     container_name: immich_machine_learning
