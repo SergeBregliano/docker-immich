@@ -80,4 +80,3 @@ networks:
       name: ${FRONTEND_NETWORK}
   immich:
       internal: true
-      name: ${BACKEND_NETWORK}
