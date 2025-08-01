@@ -85,7 +85,7 @@ volumes:
 
 networks:
   gateway:
-    external:
-      name: ${FRONTEND_NETWORK}
+    name: ${FRONTEND_NETWORK}
+    external: true
   immich:
-      internal: true
+    internal: true
